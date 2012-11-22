@@ -155,8 +155,6 @@ class PbLiteSerializer(object):
 					data = _convertToBool(data)
 				elif isEnum:
 					_ensureValidEnum(field, data)
-				# Because setattr(..., ..., None) for optional fields is
-				# okay, we don't need our own branching here.
 				try:
 					if field.label == FieldDescriptor.LABEL_OPTIONAL and data == None:
 						pass
@@ -184,9 +182,15 @@ class PbLiteSerializer(object):
 			try:
 				subdata = data[tag]
 			except IndexError:
-				# Raise even if it was an optional field.
-				raise PbDecodeError("For message %r expected index "
-					"%r but it was missing." % (message, tag))
+				if tag > (len(data) - 1) and field.label == FieldDescriptor.LABEL_OPTIONAL:
+					# Deals with the fact that the js pblite serializer leaves off
+					# null optional fields at the end of a message.  The len(data) must
+					# be adjusted because there's always a null value in the first position
+					# and because tags are 1-indexed by default.
+					pass
+				else:
+					raise PbDecodeError("For message %r expected index "
+						"%r but it was missing." % (message, tag))
 			self._deserializeMessageField(message, field, subdata)
 
 

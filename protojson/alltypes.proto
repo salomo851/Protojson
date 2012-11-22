@@ -72,3 +72,10 @@ message TestAllTypes {
 
 	required int32 required_int32 = 50 [default = 1];
 }
+
+message TestOptionalFieldsAtEnd {
+  optional string first_value = 1;
+  optional string second_value = 2;
+  optional string third_value = 3;
+  optional string fourth_value = 4;
+}

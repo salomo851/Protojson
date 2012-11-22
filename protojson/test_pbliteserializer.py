@@ -60,6 +60,15 @@ def _getExpectedDefaults():
 	]
 	return expectedDefaults
 
+def _getExpectedDefaultsForOptionalFieldsAtEnd():
+	return [
+		  None, # 0
+			None, # 1
+			'moo', # 2
+			# The JavaScript pbliteserializer leaves off undefined
+			# values if they come at the end.
+			]
+
 
 class PbLiteSerializeTests(TestCase):
 	"""
@@ -406,3 +415,9 @@ class PbLiteDeserializeTests(TestCase):
 		self.serializer.deserialize(messageDecoded, pblite)
 		self.assertFalse(messageDecoded.HasField("optional_int32"))
 		self.assertEqual(0, messageDecoded.optional_int32)
+
+	def test_optionalFieldsNullAtEnd(self):
+		pblite = _getExpectedDefaultsForOptionalFieldsAtEnd()
+		# Set the optional_int32
+		messageDecoded = alltypes_pb2.TestOptionalFieldsAtEnd()
+		self.serializer.deserialize(messageDecoded, pblite)
