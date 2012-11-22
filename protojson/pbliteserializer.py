@@ -187,7 +187,10 @@ class PbLiteSerializer(object):
 					# null optional fields at the end of a message.  The len(data) must
 					# be adjusted because there's always a null value in the first position
 					# and because tags are 1-indexed by default.
-					pass
+          #
+					# Since these fields are null, we don't bother deserializing them.
+					# Plus if we did, the value of subdata would be wrong.
+					continue
 				else:
 					raise PbDecodeError("For message %r expected index "
 						"%r but it was missing." % (message, tag))
