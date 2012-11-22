@@ -158,7 +158,10 @@ class PbLiteSerializer(object):
 				# Because setattr(..., ..., None) for optional fields is
 				# okay, we don't need our own branching here.
 				try:
-					setattr(message, field.name, data)
+					if field.label == FieldDescriptor.LABEL_OPTIONAL and data == None:
+						pass
+					else:
+						setattr(message, field.name, data)
 				except (TypeError, ValueError), e:
 					raise PbDecodeError(str(e))
 			else:

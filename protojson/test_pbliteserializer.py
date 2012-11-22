@@ -388,6 +388,7 @@ class PbLiteDeserializeTests(TestCase):
 		# Set the optional_int64
 		pblite[2] = None
 		messageDecoded = alltypes_pb2.TestAllTypes()
+		self.serializer.deserialize(messageDecoded, pblite)
 		self.assertFalse(messageDecoded.HasField("optional_int64"))
 		self.assertEqual(1, messageDecoded.optional_int64)
 
@@ -402,5 +403,6 @@ class PbLiteDeserializeTests(TestCase):
 		# Set the optional_int32
 		pblite[1] = None
 		messageDecoded = alltypes_pb2.TestAllTypes()
+		self.serializer.deserialize(messageDecoded, pblite)
 		self.assertFalse(messageDecoded.HasField("optional_int32"))
 		self.assertEqual(0, messageDecoded.optional_int32)
